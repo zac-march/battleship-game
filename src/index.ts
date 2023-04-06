@@ -1,4 +1,6 @@
 import "./style.css";
-import { exclaim } from "./function";
+import { makeShip } from "./makeShip";
 
-console.log(exclaim("hell2o"));
+const ship = makeShip(2);
+
+console.log(ship);
