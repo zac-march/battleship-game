@@ -1,6 +1,6 @@
 import "./style.css";
-import { makeShip } from "./makeShip";
+import { Ship } from "./factories/Ship";
 
-const ship = makeShip(2);
+const ship = new Ship(2);
 
 console.log(ship);
