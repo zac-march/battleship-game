@@ -4,15 +4,19 @@ import { Player } from "./Classes/Player";
 import { Ship } from "./Classes/Ship";
 
 const main = document.body.querySelector("main");
+const boardsContainer = document.createElement("div");
+boardsContainer.className = "boards";
 
 const player = new Player(true, false);
-const computer = new Player(false, true);
+const opponent = new Player(false, true);
 
 player.board.setRandomFleet();
+opponent.board.setRandomFleet();
 
-player.board.recieveAttack(1, 2);
-const board = boardComponent(player);
+const playerBoard = boardComponent(player);
+const opponentBoard = boardComponent(opponent);
 
-console.log("boards:", board);
+console.log("boards:", playerBoard);
 
-main.appendChild(board);
+main.append(boardsContainer);
+boardsContainer.append(playerBoard, opponentBoard);

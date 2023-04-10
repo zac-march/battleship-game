@@ -77,6 +77,13 @@ footer > a:hover > i {
 }
 
 /* Game */
+
+.boards {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 2rem;
+}
+
 .board {
   display: grid;
 }

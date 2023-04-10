@@ -27,16 +27,22 @@ function boardComponent(player: Player) {
       cell.dataset.coordinate = coordinate.toString();
       cell.dataset.value = cellValue;
 
-      if (cellValue == "1" || cellValue == "-1")
-        cell.style.backgroundColor = `#ff9888`;
-      if (cellValue == "-1") cell.textContent = "X";
-      else if (cellValue == "-2") cell.textContent = "O";
+      if (cellValue == "-1") {
+        cell.style.backgroundColor = `#ff9898`;
+        cell.textContent = "X";
+      } else if (cellValue == "-2") cell.textContent = "O";
 
-      cell.addEventListener("click", () => {
-        if (player.board.getCell(coordinate) > -1)
-          player.board.recieveAttack(coordinate[0], coordinate[1]);
-        reloadBoard();
-      });
+      if (player.isComputer) {
+        cell.addEventListener("click", () => {
+          if (player.board.getCell(coordinate) > -1) {
+            player.board.recieveAttack(coordinate[0], coordinate[1]);
+            reloadBoard();
+          }
+        });
+      } else {
+        if (player.board.isCellOccupied(coordinate))
+          cell.style.backgroundColor = `#ff9898`;
+      }
 
       boardGrid.appendChild(cell);
     }

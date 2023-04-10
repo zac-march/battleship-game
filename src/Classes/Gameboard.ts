@@ -83,7 +83,6 @@ class Gameboard {
   }
 
   setCell([x, y]: number[], value: number) {
-    if (x > 9 || y > 9) throw new Error("WTF");
     this.boardArr[x][y] = value;
   }
 
@@ -109,6 +108,9 @@ class Gameboard {
       }
       return true;
     }
+  }
+  isCellOccupied([x, y]: number[]) {
+    return this.boardArr[x][y] === 1 || this.boardArr[x][y] === -1;
   }
 
   setRandomFleet() {
