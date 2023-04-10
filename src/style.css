@@ -75,3 +75,18 @@ footer {
 footer > a:hover > i {
   transform: rotate(-2deg) scale(1.1);
 }
+
+/* Game */
+.board {
+  display: grid;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: beige;
+  outline: 1px black solid;
+  aspect-ratio: 1/1;
+}
