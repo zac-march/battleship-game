@@ -30,8 +30,8 @@ it("Place ship: populates ship list", () => {
   gameboard.placeShip(new Ship(5), [4, 3], "vertical");
   gameboard.placeShip(new Ship(2), [4, 3], "vertical");
 
-  expect(gameboard.ships.length).toBe(2);
-  expect(gameboard.ships[0].shipObj.length).toEqual(5);
+  expect(gameboard.fleet.length).toBe(2);
+  expect(gameboard.fleet[0].shipObj.length).toEqual(5);
 });
 
 it("Recieve attack: ship can be hit", () => {
@@ -60,4 +60,22 @@ it("Can detect game over", () => {
   gameboard.recieveAttack(1, 2);
 
   expect(gameboard.detectGameOver()).toBe(true);
+});
+
+it("Invalid placement: ship overlap", () => {
+  const gameboard = new Gameboard();
+  gameboard.placeShip(new Ship(3), [1, 1], "horizontal");
+  expect(gameboard.isValidPlacement(new Ship(3), [1, 1], "vertical")).toBe(
+    false
+  );
+});
+
+it("Invalid placement: outside board", () => {
+  const gameboard = new Gameboard();
+  expect(gameboard.isValidPlacement(new Ship(3), [1, 8], "horizontal")).toBe(
+    false
+  );
+  expect(gameboard.isValidPlacement(new Ship(4), [5, 9], "horizontal")).toBe(
+    false
+  );
 });

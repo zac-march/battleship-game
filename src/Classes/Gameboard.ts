@@ -1,9 +1,9 @@
-import { NumericLiteral } from "typescript";
 import { Ship } from "./Ship";
 
 class Gameboard {
   boardArr: number[][];
-  ships: any[];
+  fleet: any[];
+  presetShips: Ship[];
 
   constructor() {
     this.boardArr = [
@@ -19,29 +19,40 @@ class Gameboard {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ];
 
-    this.ships = [];
+    this.fleet = [];
+
+    this.presetShips = [
+      new Ship(5),
+      new Ship(4),
+      new Ship(3),
+      new Ship(3),
+      new Ship(2),
+    ];
+  }
+
+  getPlacedCells(shipObj: Ship, coordinates: number[], orientation: string) {
+    const placedCells = [];
+    for (let i = 0; i < shipObj.length; i++) {
+      const [x, y] = coordinates;
+      placedCells.push([x, y]);
+      orientation === "vertical" ? coordinates[0]++ : coordinates[1]++;
+    }
+    return placedCells;
   }
 
   placeShip(shipObj: Ship, coordinates: number[], orientation: string) {
-    const occupiedCells = [];
+    const placedCells = this.getPlacedCells(shipObj, coordinates, orientation);
+    placedCells.forEach((cell) => this.setCell([cell[0], cell[1]], 1));
 
-    for (let i = 0; i < shipObj.length; i++) {
-      const [x, y] = coordinates;
-      occupiedCells.push([x, y]);
-      this.setCell([x, y], 1);
-      orientation === "vertical" ? coordinates[0]++ : coordinates[1]++;
-    }
-    this.ships.push({
+    this.fleet.push({
       shipObj,
-      occupiedCells,
+      placedCells: placedCells,
     });
   }
 
   recieveAttack(x: number, y: number) {
-    const hitShip = this.ships.find((ship) =>
-      ship.occupiedCells.some(
-        (cell: number[]) => cell[0] === x && cell[1] === y
-      )
+    const hitShip = this.fleet.find((ship) =>
+      ship.placedCells.some((cell: number[]) => cell[0] === x && cell[1] === y)
     );
 
     if (hitShip) {
@@ -53,7 +64,7 @@ class Gameboard {
   }
 
   detectGameOver() {
-    const sunkValues = this.ships.map((ship) => ship.shipObj.isSunk());
+    const sunkValues = this.fleet.map((ship) => ship.shipObj.isSunk());
     return sunkValues.every((value) => value);
   }
 
@@ -72,7 +83,47 @@ class Gameboard {
   }
 
   setCell([x, y]: number[], value: number) {
+    if (x > 9 || y > 9) throw new Error("WTF");
     this.boardArr[x][y] = value;
+  }
+
+  isValidPlacement(shipObj: Ship, coordinates: number[], orientation: string) {
+    const placedCells = this.getPlacedCells(shipObj, coordinates, orientation);
+
+    if (isOutsideBoard()) {
+      return false;
+    } else {
+      return isSpaceEmpty(this.boardArr);
+    }
+
+    function isOutsideBoard() {
+      for (let cell of placedCells) {
+        if (cell[0] > 9 || cell[1] > 9) return true;
+      }
+      return false;
+    }
+
+    function isSpaceEmpty(boardArray: number[][]) {
+      for (let cell of placedCells) {
+        if (boardArray[cell[0]][cell[1]] == 1) return false;
+      }
+      return true;
+    }
+  }
+
+  setRandomFleet() {
+    for (let ship of this.presetShips) {
+      let isValid = false;
+      while (!isValid) {
+        let x = Math.floor(Math.random() * 10);
+        let y = Math.floor(Math.random() * 10);
+        let orientation = Math.random() < 0.5 ? "horizontal" : "vertical";
+        isValid = this.isValidPlacement(ship, [x, y], orientation);
+        if (isValid) {
+          this.placeShip(ship, [x, y], orientation);
+        }
+      }
+    }
   }
 }
 
