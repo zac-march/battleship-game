@@ -1,16 +1,17 @@
 import { Player } from "../Classes/Player";
+import { Ship } from "../Classes/Ship";
 
-function boardComponent(player: Player) {
-  const boardArray = player.board.boardArr;
+function boardComponent(participant: Player) {
+  const boardArray = participant.board.boardArr;
   const boardSize = boardArray.length;
 
-  const boardContainer = document.createElement("div");
+  const container = document.createElement("div");
   reloadBoard();
 
   function reloadBoard() {
-    boardContainer.innerHTML = "";
-    const boardGrid = loadBoardContent();
-    boardContainer.appendChild(boardGrid);
+    container.innerHTML = "";
+    const boardContent = loadBoardContent();
+    container.appendChild(boardContent);
   }
 
   function loadBoardContent() {
@@ -23,32 +24,34 @@ function boardComponent(player: Player) {
       cell.className = "cell";
 
       const coordinate = [Math.floor(i / boardSize), i % boardSize];
-      const cellValue = player.board.getCell(coordinate).toString();
+      const cellValue = participant.board.getCell(coordinate).toString();
       cell.dataset.coordinate = coordinate.toString();
       cell.dataset.value = cellValue;
 
-      if (cellValue == "-1") {
-        cell.style.backgroundColor = `#ff9898`;
-        cell.textContent = "X";
-      } else if (cellValue == "-2") cell.textContent = "O";
+      if (participant.board.isCellOccupied(coordinate)) {
+        const shipIndex: number = participant.board.getIndexOfShip(coordinate);
+        const colour =
+          ((200 - 100) / (participant.board.fleet.length - 1)) * shipIndex +
+          100;
+        const cellColour = `rgb(${colour}, ${colour}, ${colour})`;
 
-      if (player.isComputer) {
-        cell.addEventListener("click", () => {
-          if (player.board.getCell(coordinate) > -1) {
-            player.board.recieveAttack(coordinate[0], coordinate[1]);
-            reloadBoard();
-          }
-        });
-      } else {
-        if (player.board.isCellOccupied(coordinate))
-          cell.style.backgroundColor = `#ff9898`;
+        console.log("shipIndex:", shipIndex, "cellColour:", cellColour);
+        if (cellValue == "-1") {
+          cell.style.backgroundColor = cellColour;
+          cell.textContent = "X";
+        }
+        // if (!participant.isOpponent && cellValue == "-1") {
+        cell.style.backgroundColor = cellColour;
+        // }
+      } else if (cellValue == "-2") {
+        cell.textContent = "O";
       }
 
       boardGrid.appendChild(cell);
     }
     return boardGrid;
   }
-  return boardContainer;
+  return { container, reloadBoard };
 }
 
 export { boardComponent };
