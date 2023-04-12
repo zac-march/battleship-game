@@ -50,7 +50,7 @@ class Gameboard {
     });
   }
 
-  recieveAttack(x: number, y: number) {
+  recieveAttack([x, y]: number[]) {
     const hitShip = this.fleet.find((ship) =>
       ship.placedCells.some((cell: number[]) => cell[0] === x && cell[1] === y)
     );
@@ -58,8 +58,10 @@ class Gameboard {
     if (hitShip) {
       hitShip.shipObj.hit();
       this.setCell([x, y], -1);
+      return "hit";
     } else {
       this.setCell([x, y], -2);
+      return "miss";
     }
   }
 
@@ -68,14 +70,18 @@ class Gameboard {
     return sunkValues.every((value) => value);
   }
 
-  getAttackableCells() {
-    const attackableCells: number[][] = [];
-    for (let x = 0; x < this.boardArr.length; x++) {
-      for (let y = 0; y < this.boardArr[x].length; y++) {
-        if (this.getCell([x, y]) >= 0) attackableCells.push([x, y]);
+  getAttackableCells(subset?: number[][]) {
+    if (subset !== undefined) {
+      return subset.filter((cell: number[]) => this.getCell(cell) >= 0);
+    } else {
+      const attackableCells: number[][] = [];
+      for (let x = 0; x < this.boardArr.length; x++) {
+        for (let y = 0; y < this.boardArr[x].length; y++) {
+          if (this.getCell([x, y]) >= 0) attackableCells.push([x, y]);
+        }
       }
+      return attackableCells;
     }
-    return attackableCells;
   }
 
   getCell([x, y]: number[]) {
@@ -123,6 +129,18 @@ class Gameboard {
         isValid = this.isValidPlacement(ship, [x, y], orientation);
         if (isValid) {
           this.placeShip(ship, [x, y], orientation);
+        }
+      }
+    }
+  }
+
+  getIndexOfShip(coordinate: number[]) {
+    for (let index = 0; index < this.fleet.length; index++) {
+      const ship = this.fleet[index];
+      for (let i = 0; i < ship.placedCells.length; i++) {
+        const cell = ship.placedCells[i];
+        if (cell[0] === coordinate[0] && cell[1] === coordinate[1]) {
+          return index;
         }
       }
     }
