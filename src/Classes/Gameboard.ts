@@ -85,6 +85,8 @@ class Gameboard {
   }
 
   getCell([x, y]: number[]) {
+    if (x > 9 || y > 9 || x < 0 || y < 0)
+      throw new Error(`Coordinates ${[x, y]}, is outside the gameboard`);
     return this.boardArr[x][y];
   }
 
@@ -92,25 +94,24 @@ class Gameboard {
     this.boardArr[x][y] = value;
   }
 
+  isOutsideBoard(cell: number[]) {
+    if (cell[0] > 9 || cell[1] > 9 || cell[0] < 0 || cell[1] < 0) {
+      return true;
+    }
+    return false;
+  }
+
   isValidPlacement(shipObj: Ship, coordinates: number[], orientation: string) {
     const placedCells = this.getPlacedCells(shipObj, coordinates, orientation);
-
-    if (isOutsideBoard()) {
+    if (placedCells.some((cell) => this.isOutsideBoard(cell))) {
       return false;
     } else {
       return isSpaceEmpty(this.boardArr);
     }
 
-    function isOutsideBoard() {
-      for (let cell of placedCells) {
-        if (cell[0] > 9 || cell[1] > 9) return true;
-      }
-      return false;
-    }
-
     function isSpaceEmpty(boardArray: number[][]) {
       for (let cell of placedCells) {
-        if (boardArray[cell[0]][cell[1]] == 1) return false;
+        if (boardArray[cell[0]][cell[1]] != 0) return false;
       }
       return true;
     }
@@ -132,6 +133,11 @@ class Gameboard {
         }
       }
     }
+  }
+
+  isShipSunk(coordinate: number[]) {
+    const index = this.getIndexOfShip(coordinate);
+    return this.fleet[index].shipObj.isSunk();
   }
 
   getIndexOfShip(coordinate: number[]) {
