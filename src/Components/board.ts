@@ -1,9 +1,7 @@
 import { Player } from "../Classes/Player";
-import { Ship } from "../Classes/Ship";
 
 function boardComponent(participant: Player) {
-  const boardArray = participant.board.boardArr;
-  const boardSize = boardArray.length;
+  const boardSize = participant.board.boardArr.length;
 
   const container = document.createElement("div");
   reloadBoard();
@@ -29,28 +27,27 @@ function boardComponent(participant: Player) {
       cell.dataset.value = cellValue;
 
       if (participant.board.isCellOccupied(coordinate)) {
-        const shipIndex: number = participant.board.getIndexOfShip(coordinate);
-        const colour =
-          ((200 - 100) / (participant.board.fleet.length - 1)) * shipIndex +
-          100;
-        const cellColour = `rgb(${colour}, ${colour}, ${colour})`;
-
-        console.log("shipIndex:", shipIndex, "cellColour:", cellColour);
-        if (cellValue == "-1") {
+        if (!participant.isOpponent || cellValue == "-1") {
+          const cellColour = getShipColour(coordinate);
           cell.style.backgroundColor = cellColour;
-          cell.textContent = "X";
         }
-        // if (!participant.isOpponent && cellValue == "-1") {
-        cell.style.backgroundColor = cellColour;
-        // }
-      } else if (cellValue == "-2") {
-        cell.textContent = "O";
       }
+
+      if (cellValue == "-1") cell.textContent = "X";
+      else if (cellValue == "-2") cell.textContent = "0";
 
       boardGrid.appendChild(cell);
     }
     return boardGrid;
   }
+
+  function getShipColour(coordinate: number[]) {
+    const shipIndex = participant.board.getIndexOfShip(coordinate);
+    const colour =
+      ((200 - 100) / participant.board.presetShips.length) * shipIndex + 100;
+    return `rgb(${colour}, ${colour}, ${colour})`;
+  }
+
   return { container, reloadBoard };
 }
 
