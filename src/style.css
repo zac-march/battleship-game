@@ -44,6 +44,7 @@ header,
 footer,
 main {
   padding: 30px 25% 30px 25%;
+  text-align: center;
 }
 
 main {
@@ -93,7 +94,11 @@ footer > a:hover > i {
   justify-content: center;
   align-items: center;
 
-  background-color: rgb(51, 124, 173);
+  background-color: rgb(94, 160, 204);
   outline: 1px black solid;
   aspect-ratio: 1/1;
+}
+
+.cell-hover {
+  background-color: rgb(237, 255, 250);
 }
