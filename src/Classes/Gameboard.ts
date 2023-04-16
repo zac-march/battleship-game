@@ -30,23 +30,13 @@ class Gameboard {
     ];
   }
 
-  getPlacedCells(shipObj: Ship, coordinates: number[], orientation: string) {
-    const placedCells = [];
-    for (let i = 0; i < shipObj.length; i++) {
-      const [x, y] = coordinates;
-      placedCells.push([x, y]);
-      orientation === "vertical" ? coordinates[0]++ : coordinates[1]++;
-    }
-    return placedCells;
-  }
-
   placeShip(shipObj: Ship, coordinates: number[], orientation: string) {
     const placedCells = this.getPlacedCells(shipObj, coordinates, orientation);
     placedCells.forEach((cell) => this.setCell([cell[0], cell[1]], 1));
 
     this.fleet.push({
       shipObj,
-      placedCells: placedCells,
+      placedCells,
     });
   }
 
@@ -103,6 +93,7 @@ class Gameboard {
 
   isValidPlacement(shipObj: Ship, coordinates: number[], orientation: string) {
     const placedCells = this.getPlacedCells(shipObj, coordinates, orientation);
+
     if (placedCells.some((cell) => this.isOutsideBoard(cell))) {
       return false;
     } else {
@@ -116,6 +107,18 @@ class Gameboard {
       return true;
     }
   }
+
+  getPlacedCells(shipObj: Ship, coordinates: number[], orientation: string) {
+    const placedCells = [];
+    let newCoordinates = [...coordinates];
+    for (let i = 0; i < shipObj.length; i++) {
+      const [x, y] = newCoordinates;
+      placedCells.push([x, y]);
+      orientation === "vertical" ? newCoordinates[0]++ : newCoordinates[1]++;
+    }
+    return placedCells;
+  }
+
   isCellOccupied([x, y]: number[]) {
     return this.boardArr[x][y] === 1 || this.boardArr[x][y] === -1;
   }
