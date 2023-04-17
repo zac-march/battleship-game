@@ -122,7 +122,7 @@ function game() {
       player.takeTurn(opponent, cellData.coordinates);
       opponentBoard.reloadBoard();
 
-      if (player.lastAttackResult == "hit") {
+      if (player.lastAttackSuccess) {
         const cellElement = getCellElement(
           cellData.coordinates,
           opponentBoard.container
@@ -133,7 +133,7 @@ function game() {
       setTimeout(() => {
         opponent.takeTurn(player);
         playerBoard.reloadBoard();
-        if (opponent.lastAttackResult == "hit") {
+        if (opponent.lastAttackSuccess) {
           const cellElement = getCellElement(
             opponent.lastAttackedCell,
             playerBoard.container

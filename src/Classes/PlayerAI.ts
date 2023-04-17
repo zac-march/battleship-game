@@ -22,7 +22,8 @@ class PlayerAI extends Player {
 
     const randCellIndex = Math.floor(Math.random() * targetCells.length);
     const attackedCell = targetCells[randCellIndex];
-    this.lastAttackResult = rival.board.recieveAttack(attackedCell);
+    rival.board.recieveAttack(attackedCell);
+    this.lastAttackSuccess = rival.board.lastAttackSuccess;
     this.lastAttackedCell = attackedCell;
 
     if (usedAttackQueue) this.attackQueue.splice(randCellIndex, 1);
@@ -31,7 +32,7 @@ class PlayerAI extends Player {
   }
 
   private updateAttackQueue(rival: Player, attackedCell: number[]) {
-    if (this.lastAttackResult === "hit") {
+    if (this.lastAttackSuccess) {
       if (rival.board.isShipSunk(attackedCell)) {
         this.attackQueue = [];
       } else {

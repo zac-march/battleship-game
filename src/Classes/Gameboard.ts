@@ -4,6 +4,7 @@ class Gameboard {
   boardArr: number[][];
   fleet: any[];
   presetShips: Ship[];
+  lastAttackSuccess: boolean = false;
 
   constructor() {
     this.boardArr = [
@@ -28,6 +29,8 @@ class Gameboard {
       new Ship(3),
       new Ship(2),
     ];
+
+    this.lastAttackSuccess = false;
   }
 
   placeShip(shipObj: Ship, coordinates: number[], orientation: string) {
@@ -48,10 +51,10 @@ class Gameboard {
     if (hitShip) {
       hitShip.shipObj.hit();
       this.setCell([x, y], -1);
-      return "hit";
+      this.lastAttackSuccess = true;
     } else {
       this.setCell([x, y], -2);
-      return "miss";
+      this.lastAttackSuccess = false;
     }
   }
 
