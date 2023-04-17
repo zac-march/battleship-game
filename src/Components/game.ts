@@ -3,6 +3,7 @@ import { PlayerAI } from "../Classes/PlayerAI";
 import { boardComponent } from "./board";
 
 function game() {
+  const gameStateMessage = document.querySelector("#game-message");
   const main = document.body.querySelector("main");
   const boardsContainer = document.createElement("div");
   main.append(boardsContainer);
@@ -28,6 +29,7 @@ function game() {
   }
 
   function setupGame() {
+    gameStateMessage.textContent = "Setup you fleet!\n";
     opponent = new PlayerAI(false, true);
     player = new Player(true, false);
 
@@ -43,7 +45,7 @@ function game() {
     playerBoard.container.addEventListener("mouseout", handlePlacementHover);
 
     function placePlayerShip(e: { target: HTMLInputElement }) {
-      const cell = getCellElement(e.target);
+      const cell = getCellData(e.target);
       const shipIndex = player.board.fleet.length;
 
       if (cell.value != 0) return;
@@ -56,16 +58,12 @@ function game() {
         "vertical"
       );
 
-      if (!isValid) {
-        console.log("Invalid placement");
-        return;
-      }
+      if (!isValid) return;
 
       player.board.placeShip(currentShip, cell.coordinates, "vertical");
       playerBoard.reloadBoard();
 
       if (player.board.fleet.length >= player.board.presetShips.length) {
-        console.log("All ships placed");
         playerBoard.container.removeEventListener(
           "mouseover",
           handlePlacementHover
@@ -93,7 +91,7 @@ function game() {
     function getHoveredCells(currentCell: HTMLInputElement) {
       const currentShip = player.board.presetShips[player.board.fleet.length];
       const orientation = "vertical";
-      const cell = getCellElement(currentCell);
+      const cell = getCellData(currentCell);
 
       if (
         !player.board.isValidPlacement(
@@ -114,32 +112,61 @@ function game() {
   }
 
   function playGame() {
+    gameStateMessage.textContent = "Attack the enemy!";
     opponentBoard.container.addEventListener("click", handlePlayerAttack);
 
     function handlePlayerAttack(e: { target: HTMLInputElement }) {
-      const cell = getCellElement(e.target);
-      if (cell.value < 0) return;
-      player.takeTurn(opponent, cell.coordinates);
-      opponent.takeTurn(player);
-      playerBoard.reloadBoard();
+      const cellData = getCellData(e.target);
+      if (cellData.value < 0) return;
+
+      player.takeTurn(opponent, cellData.coordinates);
       opponentBoard.reloadBoard();
 
+      if (player.lastAttackResult == "hit") {
+        const cellElement = getCellElement(
+          cellData.coordinates,
+          opponentBoard.container
+        );
+        handleShakeEffect(cellElement);
+      }
+
+      setTimeout(() => {
+        opponent.takeTurn(player);
+        playerBoard.reloadBoard();
+        if (opponent.lastAttackResult == "hit") {
+          const cellElement = getCellElement(
+            opponent.lastAttackedCell,
+            playerBoard.container
+          );
+          handleShakeEffect(cellElement);
+        }
+      }, Math.random() * (1200 - 300) + 300);
+
+      function handleShakeEffect(element: HTMLElement) {
+        element.classList.add("shake");
+        setTimeout(() => element.classList.remove("shake"), 500);
+      }
+
       if (player.board.detectGameOver() || opponent.board.detectGameOver()) {
-        console.log("Game over!");
+        opponentBoard.container.removeEventListener(
+          "click",
+          handlePlayerAttack
+        );
         setGame("end");
       }
     }
   }
 
   function endGame() {
-    const isPlayerWinner = opponent.board.detectGameOver();
     let message: string;
-    if (isPlayerWinner) message = "You win!";
-    else message = "You lose :(";
-    console.log(message);
+    message = opponent.board.detectGameOver() ? "You win!" : "You lose :(";
+    gameStateMessage.textContent = "Game over!\n" + message;
   }
 
-  function getCellElement(element: HTMLInputElement) {
+  function getCellElement(coordinates: number[], boardContainer: any) {
+    return boardContainer.querySelector(`[data-coordinate="${coordinates}"]`);
+  }
+  function getCellData(element: HTMLInputElement) {
     const value = parseInt(element.getAttribute("data-value"));
     const coordinatesString = element
       .getAttribute("data-coordinate")
