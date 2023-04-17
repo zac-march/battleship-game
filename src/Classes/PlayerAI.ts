@@ -2,6 +2,7 @@ import { Player } from "./Player";
 
 class PlayerAI extends Player {
   attackQueue: number[][];
+  lastAttackedCell: number[];
 
   constructor(isTurn: boolean, isOpponent: boolean) {
     super(isTurn, isOpponent);
@@ -21,19 +22,16 @@ class PlayerAI extends Player {
 
     const randCellIndex = Math.floor(Math.random() * targetCells.length);
     const attackedCell = targetCells[randCellIndex];
-    const attackResult = rival.board.recieveAttack(attackedCell);
+    this.lastAttackResult = rival.board.recieveAttack(attackedCell);
+    this.lastAttackedCell = attackedCell;
 
     if (usedAttackQueue) this.attackQueue.splice(randCellIndex, 1);
 
-    this.updateAttackQueue(attackResult, rival, attackedCell);
+    this.updateAttackQueue(rival, attackedCell);
   }
 
-  private updateAttackQueue(
-    attackResult: string,
-    rival: Player,
-    attackedCell: number[]
-  ) {
-    if (attackResult === "hit") {
+  private updateAttackQueue(rival: Player, attackedCell: number[]) {
+    if (this.lastAttackResult === "hit") {
       if (rival.board.isShipSunk(attackedCell)) {
         this.attackQueue = [];
       } else {
