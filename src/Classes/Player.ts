@@ -1,6 +1,6 @@
 import { Gameboard } from "./Gameboard";
 
-class Player {
+export class Player {
   board: Gameboard;
   isTurn: boolean;
   isOpponent: boolean;
@@ -17,5 +17,3 @@ class Player {
     this.lastAttackSuccess = rival.board.lastAttackSuccess;
   }
 }
-
-export { Player };

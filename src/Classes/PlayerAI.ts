@@ -1,6 +1,6 @@
 import { Player } from "./Player";
 
-class PlayerAI extends Player {
+export class PlayerAI extends Player {
   attackQueue: number[][];
   lastAttackedCell: number[];
 
@@ -57,5 +57,3 @@ class PlayerAI extends Player {
     this.attackQueue = [...new Set(attackableCells)];
   }
 }
-
-export { PlayerAI };

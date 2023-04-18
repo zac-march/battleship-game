@@ -1,4 +1,4 @@
-class Ship {
+export class Ship {
   length: number;
   hitCount: number;
 
@@ -15,5 +15,3 @@ class Ship {
     this.hitCount += 1;
   }
 }
-
-export { Ship };

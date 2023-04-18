@@ -2,7 +2,7 @@ import { Player } from "../Classes/Player";
 import { PlayerAI } from "../Classes/PlayerAI";
 import { boardComponent } from "./board";
 
-function game() {
+export function game() {
   const gameStateMessage = document.querySelector("#game-message");
   const main = document.body.querySelector("main");
   const boardsContainer = document.createElement("div");
@@ -188,5 +188,3 @@ function game() {
     return { element, value, coordinates };
   }
 }
-
-export { game };

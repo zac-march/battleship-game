@@ -1,6 +1,6 @@
 import { Ship } from "./Ship";
 
-class Gameboard {
+export class Gameboard {
   boardArr: number[][];
   fleet: any[];
   presetShips: Ship[];
@@ -155,5 +155,3 @@ class Gameboard {
     }
   }
 }
-
-export { Gameboard };

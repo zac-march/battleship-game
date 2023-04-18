@@ -1,6 +1,6 @@
 import { Player } from "../Classes/Player";
 
-function boardComponent(participant: Player) {
+export function boardComponent(participant: Player) {
   const boardSize = participant.board.boardArr.length;
 
   const container = document.createElement("div");
@@ -50,5 +50,3 @@ function boardComponent(participant: Player) {
 
   return { container, reloadBoard };
 }
-
-export { boardComponent };
