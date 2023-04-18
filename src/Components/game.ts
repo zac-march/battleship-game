@@ -74,6 +74,10 @@ export function game() {
           handlePlacementHover
         );
         playerBoard.container.removeEventListener("click", placePlayerShip);
+        const gameOptions = document.querySelector(
+          ".game-options"
+        ) as HTMLElement;
+        gameOptions.style.display = "none";
         setGame("play");
       }
     }

@@ -1,8 +1,8 @@
 export function loadGameOptions() {
-  const main = document.querySelector("main");
+  const playerBoard = document.querySelector(".game-message-container");
   const container = document.createElement("div");
   container.classList.add("game-options");
-  main.append(container);
+  playerBoard.append(container);
 
   loadRotationOption();
 
