@@ -107,6 +107,7 @@ footer > a:hover > i {
   outline: 1px black solid;
   aspect-ratio: 1/1;
   cursor: crosshair;
+  min-width: 2ch;
 }
 
 .cell-hover {
@@ -152,4 +153,36 @@ footer > a:hover > i {
   100% {
     transform: translate(1px, -2px) rotate(-1deg);
   }
+}
+
+#game-message {
+  padding: 0 0 1.5rem 0;
+}
+
+.game-options {
+  text-align: start;
+  padding: 0.75rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.hidden {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+}
+
+#rotation-cb + label {
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: #717172;
+  color: white;
+  padding: 10px;
+  width: max-content;
+  justify-self: center;
+}
+
+#rotation-cb + label:hover {
+  background-color: #343435;
 }
