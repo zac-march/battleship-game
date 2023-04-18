@@ -45,6 +45,7 @@ function game() {
     playerBoard.container.addEventListener("mouseout", handlePlacementHover);
 
     function placePlayerShip(e: { target: HTMLInputElement }) {
+      const orientation = getOrientation();
       const cell = getCellData(e.target);
       const shipIndex = player.board.fleet.length;
 
@@ -55,12 +56,12 @@ function game() {
       const isValid = player.board.isValidPlacement(
         currentShip,
         cell.coordinates,
-        "vertical"
+        orientation
       );
 
       if (!isValid) return;
 
-      player.board.placeShip(currentShip, cell.coordinates, "vertical");
+      player.board.placeShip(currentShip, cell.coordinates, orientation);
       playerBoard.reloadBoard();
 
       if (player.board.fleet.length >= player.board.presetShips.length) {
@@ -77,6 +78,15 @@ function game() {
       }
     }
 
+    function getOrientation() {
+      const rotationCb = document.querySelector(
+        "#rotation-cb"
+      ) as HTMLInputElement;
+      if (rotationCb.checked) {
+        return "horizontal";
+      } else return "vertical";
+    }
+
     function handlePlacementHover(e: any) {
       const isMouseOver = e.type === "mouseover" ? true : false;
       if (!e.target.classList.contains("cell")) return;
@@ -90,7 +100,7 @@ function game() {
 
     function getHoveredCells(currentCell: HTMLInputElement) {
       const currentShip = player.board.presetShips[player.board.fleet.length];
-      const orientation = "vertical";
+      const orientation = getOrientation();
       const cell = getCellData(currentCell);
 
       if (
