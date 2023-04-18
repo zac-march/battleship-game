@@ -26,7 +26,7 @@ function boardComponent(participant: Player) {
       cell.dataset.coordinate = coordinate.toString();
       cell.dataset.value = cellValue;
 
-      if (participant.board.isCellOccupied(coordinate)) {
+      if (participant.board.isCellShip(coordinate)) {
         if (!participant.isOpponent || cellValue == "-1") {
           const cellColour = getShipColour(coordinate);
           cell.style.backgroundColor = cellColour;

@@ -104,10 +104,7 @@ class Gameboard {
     }
 
     function isSpaceEmpty(boardArray: number[][]) {
-      for (let cell of placedCells) {
-        if (boardArray[cell[0]][cell[1]] != 0) return false;
-      }
-      return true;
+      return !placedCells.some((cell) => boardArray[cell[0]][cell[1]] != 0);
     }
   }
 
@@ -122,7 +119,7 @@ class Gameboard {
     return placedCells;
   }
 
-  isCellOccupied([x, y]: number[]) {
+  isCellShip([x, y]: number[]) {
     return this.boardArr[x][y] === 1 || this.boardArr[x][y] === -1;
   }
 
