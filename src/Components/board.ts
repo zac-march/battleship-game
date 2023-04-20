@@ -1,6 +1,6 @@
 import { Player } from "../Classes/Player";
-import * as Explosion from "../images/explosion.svg";
-import * as Splash from "../images/splash.svg";
+import * as Hit from "../images/fire.svg";
+import * as Miss from "../images/splash.svg";
 
 export function boardComponent(participant: Player) {
   const boardSize = participant.board.boardArr.length;
@@ -39,8 +39,13 @@ export function boardComponent(participant: Player) {
         const imageContainer = document.createElement("div");
         imageContainer.classList.add("attack-image");
         let imageSrc: string;
-        if (cellValue == "-1") imageSrc = `url(${Explosion})`;
-        else if (cellValue == "-2") imageSrc = `url(${Splash})`;
+        if (cellValue == "-1") {
+          imageSrc = `url(${Hit})`;
+          imageContainer.classList.add("hit-image");
+        } else if (cellValue == "-2") {
+          imageSrc = `url(${Miss})`;
+          imageContainer.classList.add("miss-image");
+        }
         imageContainer.style.backgroundImage = imageSrc;
         cell.append(imageContainer);
       }
