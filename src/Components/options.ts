@@ -1,12 +1,19 @@
 export function loadGameOptions() {
-  const playerBoard = document.querySelector(".game-message-container");
-  const container = document.createElement("div");
-  container.classList.add("game-options");
-  playerBoard.append(container);
+  const container = document.querySelector(".game-message-container");
+  const gameOptions = document.createElement("div");
+  gameOptions.classList.add("game-options");
+  container.append(gameOptions);
 
-  loadRotationOption();
+  function loadEndOptions() {
+    clearOptions();
+    const resetButton = document.createElement("button");
+    resetButton.classList.add("reset-btn");
+    resetButton.textContent = "Reset";
+    gameOptions.append(resetButton);
+  }
 
-  function loadRotationOption() {
+  function loadSetupOptions() {
+    clearOptions();
     const rotationCb = document.createElement("input");
     rotationCb.type = "checkbox";
     rotationCb.classList.add("hidden");
@@ -16,7 +23,7 @@ export function loadGameOptions() {
     const rotationLbl = document.createElement("label");
     rotationLbl.htmlFor = "rotation-cb";
     rotationLbl.textContent = "Rotation: Vertical";
-    container.append(rotationCb, rotationLbl);
+    gameOptions.append(rotationCb, rotationLbl);
 
     rotationCb.addEventListener("change", function () {
       if (this.checked) {
@@ -26,4 +33,10 @@ export function loadGameOptions() {
       }
     });
   }
+
+  function clearOptions() {
+    gameOptions.innerHTML = "";
+  }
+
+  return { loadEndOptions, loadSetupOptions, clearOptions };
 }

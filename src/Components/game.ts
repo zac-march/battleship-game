@@ -1,6 +1,7 @@
 import { Player } from "../Classes/Player";
 import { PlayerAI } from "../Classes/PlayerAI";
 import { boardComponent } from "./board";
+import { loadGameOptions } from "./options";
 
 export function game() {
   const gameStateMessage = document.querySelector("#game-message");
@@ -8,21 +9,25 @@ export function game() {
   const boardsContainer = document.createElement("div");
   main.append(boardsContainer);
   boardsContainer.className = "boards";
-  let opponentBoard: { container: any; reloadBoard: any };
-  let playerBoard: { container: any; reloadBoard: any };
+  let opponentBoard: { container: any; refresh: any; restart: any };
+  let playerBoard: { container: any; refresh: any; restart: any };
   let opponent: PlayerAI;
   let player: Player;
+  const options = loadGameOptions();
   setGame("setup");
 
   function setGame(gameState: string) {
     switch (gameState) {
       case "setup":
+        options.loadSetupOptions();
         setupGame();
         break;
       case "play":
+        options.clearOptions();
         playGame();
         break;
       case "end":
+        options.loadEndOptions();
         endGame();
         break;
     }
@@ -44,7 +49,10 @@ export function game() {
     playerBoard.container.addEventListener("mouseover", handlePlacementHover);
     playerBoard.container.addEventListener("mouseout", handlePlacementHover);
 
-    function placePlayerShip(e: { target: HTMLInputElement }) {
+    playerBoard.refresh();
+    opponentBoard.refresh();
+
+    function placePlayerShip(e) {
       const orientation = getOrientation();
       const cell = getCellData(e.target);
       const shipIndex = player.board.fleet.length;
@@ -62,7 +70,7 @@ export function game() {
       if (!isValid) return;
 
       player.board.placeShip(currentShip, cell.coordinates, orientation);
-      playerBoard.reloadBoard();
+      playerBoard.refresh();
 
       if (player.board.fleet.length >= player.board.presetShips.length) {
         playerBoard.container.removeEventListener(
@@ -74,10 +82,6 @@ export function game() {
           handlePlacementHover
         );
         playerBoard.container.removeEventListener("click", placePlayerShip);
-        const gameOptions = document.querySelector(
-          ".game-options"
-        ) as HTMLElement;
-        gameOptions.style.display = "none";
         setGame("play");
       }
     }
@@ -134,7 +138,7 @@ export function game() {
       if (cellData.value < 0) return;
 
       player.takeTurn(opponent, cellData.coordinates);
-      opponentBoard.reloadBoard();
+      opponentBoard.refresh();
 
       if (player.lastAttackSuccess) {
         const cellElement = getCellElement(
@@ -146,7 +150,7 @@ export function game() {
 
       setTimeout(() => {
         opponent.takeTurn(player);
-        playerBoard.reloadBoard();
+        playerBoard.refresh();
         if (opponent.lastAttackSuccess) {
           const cellElement = getCellElement(
             opponent.lastAttackedCell,
@@ -175,6 +179,11 @@ export function game() {
     let message: string;
     message = opponent.board.detectGameOver() ? "You win!" : "You lose :(";
     gameStateMessage.textContent = "Game over!\n" + message;
+    const resetBtn = document.querySelector(".reset-btn");
+    resetBtn.addEventListener("click", () => {
+      boardsContainer.innerHTML = "";
+      setGame("setup");
+    });
   }
 
   function getCellElement(coordinates: number[], boardContainer: any) {

@@ -5,4 +5,3 @@ import { loadGameOptions } from "./Components/options";
 
 loadGameMessage();
 game();
-loadGameOptions();
