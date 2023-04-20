@@ -1,6 +1,6 @@
-import { Player } from "../Classes/Player";
-import * as Hit from "../images/fire.svg";
-import * as Miss from "../images/splash.svg";
+import { Player } from "./../Classes/Player";
+import * as Hit from "./../images/fire.svg";
+import * as Miss from "./../images/splash.svg";
 
 export function boardComponent(participant: Player) {
   const boardSize = participant.board.boardArr.length;
