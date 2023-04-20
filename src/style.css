@@ -118,6 +118,23 @@ footer > a:hover > i {
   animation: shake 0.5s;
 }
 
+.attack-image {
+  width: 100%;
+  height: 100%;
+}
+
+.attack-image {
+  justify-self: center;
+  align-self: center;
+  background: none;
+  border: 0;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  padding: 1px;
+  background-origin: content-box;
+  aspect-ratio: 1/1;
+}
+
 @keyframes shake {
   0% {
     transform: translate(1px, 1px) rotate(0deg);
@@ -172,7 +189,8 @@ footer > a:hover > i {
   opacity: 0;
 }
 
-#rotation-cb + label {
+#rotation-cb + label,
+.reset-btn {
   cursor: pointer;
   border-radius: 4px;
   background-color: hsla(0, 0%, 45%, 0.696);
@@ -184,6 +202,7 @@ footer > a:hover > i {
   font-size: 0.9rem;
 }
 
-#rotation-cb + label:hover {
+#rotation-cb + label:hover,
+.reset-btn {
   background-color: hsla(0, 0%, 45%, 0.813);
 }

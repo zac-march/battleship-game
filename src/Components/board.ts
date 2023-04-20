@@ -1,12 +1,14 @@
 import { Player } from "../Classes/Player";
+import * as Explosion from "../images/explosion.svg";
+import * as Splash from "../images/splash.svg";
 
 export function boardComponent(participant: Player) {
   const boardSize = participant.board.boardArr.length;
 
   const container = document.createElement("div");
-  reloadBoard();
+  refresh();
 
-  function reloadBoard() {
+  function refresh() {
     container.innerHTML = "";
     const boardContent = loadBoardContent();
     container.appendChild(boardContent);
@@ -33,8 +35,15 @@ export function boardComponent(participant: Player) {
         }
       }
 
-      if (cellValue == "-1") cell.textContent = "X";
-      else if (cellValue == "-2") cell.textContent = "0";
+      if (participant.board.isCellHit(coordinate)) {
+        const imageContainer = document.createElement("div");
+        imageContainer.classList.add("attack-image");
+        let imageSrc: string;
+        if (cellValue == "-1") imageSrc = `url(${Explosion})`;
+        else if (cellValue == "-2") imageSrc = `url(${Splash})`;
+        imageContainer.style.backgroundImage = imageSrc;
+        cell.append(imageContainer);
+      }
 
       boardGrid.appendChild(cell);
     }
@@ -48,5 +57,5 @@ export function boardComponent(participant: Player) {
     return `rgb(${colour}, ${colour}, ${colour})`;
   }
 
-  return { container, reloadBoard };
+  return { container, refresh };
 }

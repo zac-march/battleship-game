@@ -119,6 +119,10 @@ export class Gameboard {
     return placedCells;
   }
 
+  isCellHit([x, y]: number[]) {
+    return this.boardArr[x][y] === -1 || this.boardArr[x][y] === -2;
+  }
+
   isCellShip([x, y]: number[]) {
     return this.boardArr[x][y] === 1 || this.boardArr[x][y] === -1;
   }
@@ -139,7 +143,7 @@ export class Gameboard {
   }
 
   isShipSunk(coordinate: number[]) {
-    const index = this.getIndexOfShip(coordinate);
+    const index: number = this.getIndexOfShip(coordinate);
     return this.fleet[index].shipObj.isSunk();
   }
 

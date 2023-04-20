@@ -9,8 +9,8 @@ export function game() {
   const boardsContainer = document.createElement("div");
   main.append(boardsContainer);
   boardsContainer.className = "boards";
-  let opponentBoard: { container: any; refresh: any; restart: any };
-  let playerBoard: { container: any; refresh: any; restart: any };
+  let opponentBoard: { container: any; refresh: any };
+  let playerBoard: { container: any; refresh: any };
   let opponent: PlayerAI;
   let player: Player;
   const options = loadGameOptions();
